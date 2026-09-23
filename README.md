@@ -26,4 +26,4 @@ shared/         tratamento de erros, converters JPA
 
 ## Em progresso
 
-Especialistas, chat e mensagens — tabelas já existem no schema, implementação ainda não.
+Especialistas, Chat e Mensagens — tabelas já existem no schema, implementação ainda não.
