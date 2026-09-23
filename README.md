@@ -4,7 +4,7 @@ API REST para uma plataforma de acolhimento psicológico. Autenticação com JWT
 
 ## Stack
 
-Java 21 · Spring Boot 3.5.5 · Spring Security · Spring Data JPA · MySQL · Flyway · JWT (JJWT) · Swagger/OpenAPI
+Java 21 · Spring Boot 4.1.1 · Spring Security · Spring Data JPA · MySQL · Flyway · JWT (JJWT) · Swagger/OpenAPI
 
 ## O que tem
 
