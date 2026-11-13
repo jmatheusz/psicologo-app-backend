@@ -64,8 +64,9 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
     }
 
     @ExceptionHandler(EmailJaCadastradoException.class)
-    public ProblemDetail tratarEmailDuplicado(EmailJaCadastradoException excecao) {
-        return montar(HttpStatus.CONFLICT, "E-mail indisponivel", excecao.getMessage());
+    public ResponseEntity<com.acolher.psicologo.shared.dto.ErroConflitoDTO> tratarEmailDuplicado(EmailJaCadastradoException excecao) {
+        return ResponseEntity.status(HttpStatus.CONFLICT)
+                .body(new com.acolher.psicologo.shared.dto.ErroConflitoDTO(excecao.getCampo(), excecao.getMessage()));
     }
 
     @ExceptionHandler(TokenInvalidoException.class)
@@ -90,6 +91,11 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
                 "Esta conta foi suspensa. Entre em contato com o suporte");
     }
 
+    @ExceptionHandler(com.acolher.psicologo.chat.exception.AcessoNegadoChatException.class)
+    public ProblemDetail tratarAcessoNegadoChat(com.acolher.psicologo.chat.exception.AcessoNegadoChatException excecao) {
+        return montar(HttpStatus.FORBIDDEN, "Acesso negado", excecao.getMessage());
+    }
+
     @ExceptionHandler(AuthenticationException.class)
     public ProblemDetail tratarFalhaDeAutenticacao() {
         return montar(HttpStatus.UNAUTHORIZED, "Nao autenticado",
@@ -97,12 +103,31 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
     }
 
     @ExceptionHandler(DataIntegrityViolationException.class)
-    public ProblemDetail tratarViolacaoDeIntegridade(DataIntegrityViolationException excecao,
-                                                     HttpServletRequest requisicao) {
-        log.warn("Violacao de integridade em {}: {}", requisicao.getRequestURI(),
-                causaRaiz(excecao).getMessage());
-        return montar(HttpStatus.CONFLICT, "Operacao rejeitada",
-                "A operacao viola uma regra de integridade dos dados");
+    public ResponseEntity<com.acolher.psicologo.shared.dto.ErroConflitoDTO> tratarViolacaoDeIntegridade(
+            DataIntegrityViolationException excecao,
+            HttpServletRequest requisicao) {
+        String msg = causaRaiz(excecao).getMessage();
+        log.warn("Violacao de integridade em {}: {}", requisicao.getRequestURI(), msg);
+
+        String campo = "geral";
+        String detalhe = "A operacao viola uma regra de integridade dos dados";
+
+        if (msg != null) {
+            String lower = msg.toLowerCase();
+            if (lower.contains("email") || lower.contains("usuario.email")) {
+                campo = "email";
+                detalhe = "Este e-mail já está cadastrado.";
+            } else if (lower.contains("crp") || lower.contains("codigo_crp")) {
+                campo = "crp";
+                detalhe = "Este CRP já está cadastrado.";
+            } else if (lower.contains("cpf")) {
+                campo = "cpf";
+                detalhe = "Este CPF já está cadastrado.";
+            }
+        }
+
+        return ResponseEntity.status(HttpStatus.CONFLICT)
+                .body(new com.acolher.psicologo.shared.dto.ErroConflitoDTO(campo, detalhe));
     }
 
     @ExceptionHandler(Exception.class)

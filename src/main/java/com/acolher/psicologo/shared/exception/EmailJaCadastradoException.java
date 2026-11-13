@@ -2,7 +2,18 @@ package com.acolher.psicologo.shared.exception;
 
 public class EmailJaCadastradoException extends RuntimeException {
 
+    private final String campo;
+
     public EmailJaCadastradoException() {
-        super("Ja existe uma conta com este e-mail");
+        this("email", "Este e-mail já está cadastrado.");
+    }
+
+    public EmailJaCadastradoException(String campo, String mensagem) {
+        super(mensagem);
+        this.campo = campo;
+    }
+
+    public String getCampo() {
+        return campo;
     }
 }

@@ -42,8 +42,9 @@ public class SecurityConfig {
                 .exceptionHandling(erros -> erros.authenticationEntryPoint(pontoDeEntrada))
                 .authorizeHttpRequests(autorizacao -> autorizacao
                         .requestMatchers(HttpMethod.POST, "/auth/cadastro", "/auth/login",
-                                "/auth/reenviar-verificacao").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/auth/verificar").permitAll()
+                                "/auth/reenviar-verificacao", "/especialistas", "/api/especialistas").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/auth/verificar", "/especialistas", "/api/especialistas", "/api/conteudos/**").permitAll()
+                        .requestMatchers("/ws-chat/**").permitAll()
                         .requestMatchers(ROTAS_PUBLICAS_DE_DOCUMENTACAO).permitAll()
                         .anyRequest().authenticated())
                 .addFilterBefore(filtroJwt, UsernamePasswordAuthenticationFilter.class)

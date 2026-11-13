@@ -1,10 +1,14 @@
 target/
 !.mvn/wrapper/maven-wrapper.jar
 
+# Environment & credentials
 .env
+*.env
+*.env.*
 application-local.properties
 application-local.yml
 
+# IDE & Editor files
 .idea/
 *.iml
 *.ipr
@@ -15,5 +19,10 @@ application-local.yml
 .project
 .factorypath
 
+# Logs and OS files
 *.log
+backend*.log
+*.tmp
 HELP.md
+.DS_Store
+Thumbs.db

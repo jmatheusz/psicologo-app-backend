@@ -24,7 +24,12 @@ public record NovoUsuario(
 
         Boolean anonimo,
 
-        TipoUsuario tipo) {
+        TipoUsuario tipo,
+
+        String crp,
+        String especialidade,
+        String credenciais,
+        String biografia) {
 
     public boolean desejaAnonimato() {
         return Boolean.TRUE.equals(anonimo);
